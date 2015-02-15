@@ -6,6 +6,8 @@
 #include "FemusInit.hpp"
 #include "SparseMatrix.hpp"
 #include "FElemTypeEnum.hpp"
+#include "ParsedFunction.hpp"
+#include "InputParser.hpp"
 #include "Files.hpp"
 #include "MonolithicFSINonLinearImplicitSystem.hpp"
 #include "../include/IncompressibleFSIAssembly.hpp"
@@ -32,46 +34,85 @@ bool SetBoundaryConditionComsol(const double &x, const double &y, const double &
  
 bool SetRefinementFlag(const double &x, const double &y, const double &z, const int &ElemGroupNumber,const int &level);
 
+void show_usage()
+{
+  std::cout << "Use --inputfile variable to set the input file" << std::endl;
+  std::cout << "e.g.: ./Poisson --inputfile $FEMUS_DIR/applications/Poisson/input/input.json" << std::endl;
+}
+
 //------------------------------------------------------------------------------------------------------------------
 
-int main(int argc,char **args) {
-    
+int main(int argc, char *argv[]) {
+  
+  std::string path;
+
+  if(argc < 2)
+  {
+    std::cout << argv[0] << ": You must specify the input file" << std::endl;
+    show_usage();
+    return 1;
+  }
+
+  for (int count = 1; count < argc; ++count)
+  {
+    std::string arg = argv[count];
+
+    if ((arg == "-h") || (arg == "--help")) {
+      show_usage();
+      return 0;
+    }
+    else if ((arg == "-i") || (arg == "--inputfile"))
+    {
+      if (count + 1 < argc) {
+        path = argv[++count];
+      }
+      else
+      {
+        std::cerr << "--input file option requires one argument." << std::endl;
+        return 1;
+      }
+    }
+  }
+  
   /// Init Petsc-MPI communicator
-  FemusInit mpinit(argc,args,MPI_COMM_WORLD);
+  FemusInit mpinit(argc,argv,MPI_COMM_WORLD);
 
   Files files; 
   files.CheckIODirectories();
   files.RedirectCout();
   
+  // input parser pointer
+  std::auto_ptr<InputParser> inputparser = InputParser::build(path);
+  
   unsigned simulation;
   bool dimension2D;
   
   if(argc >= 2) {
-    if( !strcmp("turek_2D_FSI",args[1])) {   /** FSI steady-state Turek benchmark */
+    if( !strcmp("turek_2D_FSI",argv[1])) {   /** FSI steady-state Turek benchmark */
       simulation=1; 
       dimension2D=1;  
     }
-    else if( !strcmp("turek_2D_solid",args[1])) {    /** Solid Turek beam benchmark test. Beware: activate gravity in assembly */
+    else if( !strcmp("turek_2D_solid",argv[1])) {    /** Solid Turek beam benchmark test. Beware: activate gravity in assembly */
       simulation=2; 
       dimension2D=1;  
    }
-    else if( !strcmp("bathe_2D_FSI",args[1])){  /** Bathe 2D membrane benchmark */
+    else if( !strcmp("bathe_2D_FSI",argv[1])){  /** Bathe 2D membrane benchmark */
       simulation=3; 
       dimension2D=1;  
    }
-   else if( !strcmp("bathe_3D_FSI",args[1])){  /** Bathe 3D cylinder FSI benchmark */
+   else if( !strcmp("bathe_3D_FSI",argv[1])){  /** Bathe 3D cylinder FSI benchmark */
       simulation=4; 
       dimension2D=0;  
     }
-    else if( !strcmp("bathe_3D_solid",args[1])) { /** Bathe 3D solid, for debugging */
+    else if( !strcmp("bathe_3D_solid",argv[1])) { /** Bathe 3D solid, for debugging */
       simulation=5; 
       dimension2D=0;  
     }
-    else if( !strcmp("bathe_3D_fluid",args[1])) { /** Bathe 3D fluid, for debugging */
+    else if( !strcmp("bathe_3D_fluid",argv[1])) { /** Bathe 3D fluid, for debugging */
       simulation=6; 
       dimension2D=0;  
     }
-    else if( !strcmp("comsol_2D_FSI",args[1])) { /** Comsol 2D vertical beam benchmark */
+    else if( !strcmp("comsol_2D_FSI",argv[1])) { /** Comsol 2D vertical beam benchmark */
       simulation=7; 
       dimension2D=1;  
     }
@@ -91,66 +132,66 @@ int main(int argc,char **args) {
   }
    
   
-  bool Vanka=0, Gmres=0, Asm=0;
-  if(argc >= 3) {
-    if( !strcmp("vanka",args[2])) 	Vanka=1;
-    else if( !strcmp("gmres",args[2])) 	Gmres=1;
-    else if( !strcmp("asm",args[2])) 	Asm=1;
-    
-    if(Vanka+Gmres+Asm==0) {
-      cout << "wrong input arguments!" << endl;
-      exit(0);
-    }
-  }
-  else {
-    cout << "No input argument set default smoother = Asm" << endl;
-    Asm=1;
-  }
+//   bool Vanka=0, Gmres=0, Asm=0;
+//   if(argc >= 3) {
+//     if( !strcmp("vanka",argv[2])) 	Vanka=1;
+//     else if( !strcmp("gmres",argv[2])) 	Gmres=1;
+//     else if( !strcmp("asm",argv[2])) 	Asm=1;
+//     
+//     if(Vanka+Gmres+Asm==0) {
+//       cout << "wrong input arguments!" << endl;
+//       exit(0);
+//     }
+//   }
+//   else {
+//     cout << "No input argument set default smoother = Asm" << endl;
+//     Asm=1;
+//   }
   
    
   
 	
-  unsigned short nm,nr;
-  std::cout<<"#MULTIGRID levels? (>=1) \n";
-  //std::cin>>nm;
-  if(simulation < 3)
-    nm=3;
-  else if(simulation == 3 || simulation == 7)
-    nm=4;
-  else if(simulation < 7)
-    nm=2;
+//   unsigned short nm,nr;
+//   std::cout<<"#MULTIGRID levels? (>=1) \n";
+//   //std::cin>>nm;
+//   if(simulation < 3)
+//     nm=3;
+//   else if(simulation == 3 || simulation == 7)
+//     nm=4;
+//   else if(simulation < 7)
+//     nm=2;
+// 
+// 
+//   std::cout<<"#MAX_REFINEMENT levels? (>=0) \n";
+//   //std::cin>>nr;
+//   nr=0;
+//   int tmp=nm;
+//   nm+=nr;
+//   nr=tmp;
 
-
-  std::cout<<"#MAX_REFINEMENT levels? (>=0) \n";
-  //std::cin>>nr;
-  nr=0;
-  int tmp=nm;
-  nm+=nr;
-  nr=tmp;
-
-  std::string infile;
-  
-  if(1 == simulation){
-    infile = "./input/turek.neu";
-  }
-  else if(2 == simulation){
-    infile = "./input/beam.neu";
-  }  
-  else if(3 == simulation){
-    infile = "./input/drum.neu";
-  }  
-  else if(4 == simulation) {
-    infile = "./input/bathe_FSI.neu";
-  }
-  else if(5 == simulation){
-    infile = "./input/bathe_shell.neu";
-  }
-  else if(6 == simulation){
-    infile = "./input/bathe_cylinder.neu";
-  }
-  else if(7 == simulation){
-    infile = "./input/comsolbenchmark.neu";
-  }
+//   std::string infile;
+//   
+//   if(1 == simulation){
+//     infile = "./input/turek.neu";
+//   }
+//   else if(2 == simulation){
+//     infile = "./input/beam.neu";
+//   }  
+//   else if(3 == simulation){
+//     infile = "./input/drum.neu";
+//   }  
+//   else if(4 == simulation) {
+//     infile = "./input/bathe_FSI.neu";
+//   }
+//   else if(5 == simulation){
+//     infile = "./input/bathe_shell.neu";
+//   }
+//   else if(6 == simulation){
+//     infile = "./input/bathe_cylinder.neu";
+//   }
+//   else if(7 == simulation){
+//     infile = "./input/comsolbenchmark.neu";
+//   }
   
    double Lref, Uref, rhof, muf, rhos, ni, E; 
   
@@ -206,7 +247,6 @@ int main(int argc,char **args) {
     //Solid solid(par,E,ni,rhos,"Neo-Hookean-BW");
     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-AB-Penalty"); //Allan Bower
-   
   }
   
   
@@ -218,8 +258,49 @@ int main(int argc,char **args) {
   cout << "Fluid properties: " << endl;
   cout << fluid << endl;
 
-  MultiLevelMesh ml_msh(nm,nr,infile.c_str(),"fifth",Lref,SetRefinementFlag);
+  // mesh ----------------------------------------
+  unsigned short nm,nr;
+  unsigned int nlevels = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.nlevels",1);   
+  nm=nlevels;
+
+  nr=0;
+
+  int tmp=nm;
+  nm+=nr;
+  nr=tmp;
+      
+  MultiLevelMesh ml_msh;
   
+  if(inputparser->isTrue("multilevel_mesh.first.type","filename"))
+  {
+    std::string filename = inputparser->getValue("multilevel_mesh.first.type.filename", "./input/input.neu"); 
+    ml_msh.ReadCoarseMesh(filename.c_str(),"seventh",Lref);
+  }
+  else if(inputparser->isTrue("multilevel_mesh.first.type","box"))
+  {
+    int numelemx = inputparser->getValue("multilevel_mesh.first.type.box.nx", 2);
+    int numelemy = inputparser->getValue("multilevel_mesh.first.type.box.ny", 2);
+    int numelemz = inputparser->getValue("multilevel_mesh.first.type.box.nz", 0);
+    double xa = inputparser->getValue("multilevel_mesh.first.type.box.xa", 0.);
+    double xb = inputparser->getValue("multilevel_mesh.first.type.box.xb", 1.);
+    double ya = inputparser->getValue("multilevel_mesh.first.type.box.ya", 0.);
+    double yb = inputparser->getValue("multilevel_mesh.first.type.box.yb", 1.);
+    double za = inputparser->getValue("multilevel_mesh.first.type.box.za", 0.);
+    double zb = inputparser->getValue("multilevel_mesh.first.type.box.zb", 0.);
+    ElemType elemtype = inputparser->getValue("multilevel_mesh.first.type.box.elem_type", QUAD9);
+    ml_msh.GenerateCoarseBoxMesh(numelemx,numelemy,numelemz,xa,xb,ya,yb,za,zb,elemtype,"seventh");
+  }
+  else
+  {
+    std::cerr << "Error: no input mesh specified. Please check to have added the keyword mesh in the input json file! " << std::endl;
+    return 1;
+  }
+  ml_msh.RefineMesh(nm,nr, SetRefinementFlag);
+    
+  ml_msh.PrintInfo();
+  
+  // end-mesh----------------------------------------------------------------
+      
   MultiLevelSolution ml_sol(&ml_msh);
   
   //Start System Variables
@@ -234,7 +315,6 @@ int main(int argc,char **args) {
   if (!dimension2D) ml_sol.AddSolution("W",LAGRANGE,SECOND,1);
   // Since the Pressure is a Lagrange multiplier it is used as an implicit variable
   ml_sol.AddSolution("P",DISCONTINOUS_POLYNOMIAL,FIRST,1);
-  //ml_sol.AddSolution("P",LAGRANGE,FIRST,1);
   ml_sol.AssociatePropertyToSolution("P","Pressure"); // Add this line
 
   //Initialize (update Init(...) function)
@@ -279,30 +359,9 @@ int main(int argc,char **args) {
   if (!dimension2D) system.AddSolutionToSystemPDE("W");
   system.AddSolutionToSystemPDE("P");
   
-//   if(dimension2D){
-//     bool sparsity_pattern_matrix[5][5]={{1, 0, 1, 0, 0},
-// 					{0, 1, 0, 1, 0},
-// 					{1, 1, 1, 1, 1},
-// 					{1, 1, 1, 1, 1},
-// 					{1, 1, 0, 0, 1}};
-//     vector < bool > sparsity_pattern (sparsity_pattern_matrix[0],sparsity_pattern_matrix[0]+25*sizeof(bool));
-//     system.SetSparsityPattern(sparsity_pattern);  
-//   }
-//   else{				   
-//     bool sparsity_pattern_matrix[7][7]={{1, 0, 0, 1, 0, 0, 0},
-// 					{0, 1, 0, 0, 1, 0, 0},
-// 					{0, 0, 1, 0, 0, 1, 0},
-// 					{1, 1, 1, 1, 1, 1, 1},
-// 					{1, 1, 1, 1, 1, 1, 1},
-// 					{1, 1, 1, 1, 1, 1, 1},
-// 					{1, 1, 1, 0, 0, 0, 1}};
-//     vector < bool > sparsity_pattern (sparsity_pattern_matrix[0],sparsity_pattern_matrix[0]+49*sizeof(bool));
-//     system.SetSparsityPattern(sparsity_pattern);  
-//   }
-   
+
   // System Fluid-Structure-Interaction
   system.SetAssembleFunction(IncompressibleFSIAssemblyAD_DD);  
-  //system.SetAssembleFunction(AssembleMatrixResFSI);  
   
   system.SetMgType(F_CYCLE);
   system.SetAbsoluteConvergenceTolerance(1.e-10);
@@ -322,9 +381,18 @@ int main(int argc,char **args) {
 
    
   //Set Smoother Options
-  if(Gmres) 		system.SetMgSmoother(GMRES_SMOOTHER);
-  else if(Asm) 		system.SetMgSmoother(ASM_SMOOTHER);
-  else if(Vanka)	system.SetMgSmoother(VANKA_SMOOTHER);
+  if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","gmres")) {
+    system.SetMgSmoother(GMRES_SMOOTHER);
+  }
+  else if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","asm")) {
+    system.SetMgSmoother(ASM_SMOOTHER);
+  }
+  else if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","vanka")) {
+    system.SetMgSmoother(VANKA_SMOOTHER);
+  }
+//   if(Gmres) 		system.SetMgSmoother(GMRES_SMOOTHER);
+//   else if(Asm) 		system.SetMgSmoother(ASM_SMOOTHER);
+//   else if(Vanka)	system.SetMgSmoother(VANKA_SMOOTHER);
   
   // init all the systems
   system.init();
@@ -370,7 +438,7 @@ int main(int argc,char **args) {
   //system.SetDirichletBCsHandling(PENALTY); 
   system.SetDirichletBCsHandling(ELIMINATION);   
    
-  ml_sol.SetWriter(GMV);
+  ml_sol.SetWriter(VTK);
 
   std::vector<std::string> mov_vars;
   mov_vars.push_back("DX");
