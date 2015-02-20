@@ -84,52 +84,52 @@ int main(int argc, char *argv[]) {
   // input parser pointer
   std::auto_ptr<InputParser> inputparser = InputParser::build(path);
   
-  unsigned simulation;
-  bool dimension2D;
+  unsigned simulation = 0;
+//   bool dimension2D;
   
-  if(argc >= 2) {
-    if( !strcmp("turek_2D_FSI",argv[1])) {   /** FSI steady-state Turek benchmark */
-      simulation=1; 
-      dimension2D=1;  
-    }
-    else if( !strcmp("turek_2D_solid",argv[1])) {    /** Solid Turek beam benchmark test. Beware: activate gravity in assembly */
-      simulation=2; 
-      dimension2D=1;  
-   }
-    else if( !strcmp("bathe_2D_FSI",argv[1])){  /** Bathe 2D membrane benchmark */
-      simulation=3; 
-      dimension2D=1;  
-   }
-   else if( !strcmp("bathe_3D_FSI",argv[1])){  /** Bathe 3D cylinder FSI benchmark */
-      simulation=4; 
-      dimension2D=0;  
-    }
-    else if( !strcmp("bathe_3D_solid",argv[1])) { /** Bathe 3D solid, for debugging */
-      simulation=5; 
-      dimension2D=0;  
-    }
-    else if( !strcmp("bathe_3D_fluid",argv[1])) { /** Bathe 3D fluid, for debugging */
-      simulation=6; 
-      dimension2D=0;  
-    }
-    else if( !strcmp("comsol_2D_FSI",argv[1])) { /** Comsol 2D vertical beam benchmark */
-      simulation=7; 
-      dimension2D=1;  
-    }
-
-    else{    
-      cout << "wrong input arguments!\n";
-      cout << "please specify the simulation you want to run, options are\n";
-      cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
-      abort();
-    }
-  }
-  else {   
-    cout << "no input arguments!\n";
-    cout << "please specify the simulation you want to run, options are\n";
-    cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
-    abort();
-  }
+//   if(argc >= 2) {
+//     if( !strcmp("turek_2D_FSI",argv[1])) {   /** FSI steady-state Turek benchmark */
+//       simulation=1; 
+// //       dimension2D=1;  
+//     }
+//     else if( !strcmp("turek_2D_solid",argv[1])) {    /** Solid Turek beam benchmark test. Beware: activate gravity in assembly */
+//       simulation=2; 
+// //       dimension2D=1;  
+//    }
+//     else if( !strcmp("bathe_2D_FSI",argv[1])){  /** Bathe 2D membrane benchmark */
+//       simulation=3; 
+// //       dimension2D=1;  
+//    }
+//    else if( !strcmp("bathe_3D_FSI",argv[1])){  /** Bathe 3D cylinder FSI benchmark */
+//       simulation=4; 
+// //       dimension2D=0;  
+//     }
+//     else if( !strcmp("bathe_3D_solid",argv[1])) { /** Bathe 3D solid, for debugging */
+//       simulation=5; 
+// //       dimension2D=0;  
+//     }
+//     else if( !strcmp("bathe_3D_fluid",argv[1])) { /** Bathe 3D fluid, for debugging */
+//       simulation=6; 
+// //       dimension2D=0;  
+//     }
+//     else if( !strcmp("comsol_2D_FSI",argv[1])) { /** Comsol 2D vertical beam benchmark */
+//       simulation=7; 
+// //       dimension2D=1;  
+//     }
+// 
+//     else{    
+//       cout << "wrong input arguments!\n";
+//       cout << "please specify the simulation you want to run, options are\n";
+//       cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
+//       abort();
+//     }
+//   }
+//   else {   
+//     cout << "no input arguments!\n";
+//     cout << "please specify the simulation you want to run, options are\n";
+//     cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
+//     abort();
+//   }
    
   
 //   bool Vanka=0, Gmres=0, Asm=0;
@@ -193,72 +193,76 @@ int main(int argc, char *argv[]) {
 //     infile = "./input/comsolbenchmark.neu";
 //   }
   
-   double Lref, Uref, rhof, muf, rhos, ni, E; 
-  
-    Lref = 1.;	
-    Uref = 1.;
+//    double Lref, Uref, rhof, muf, rhos, ni, E; 
+//   
+//     Lref = 1.;	
+//     Uref = 1.;
  
-  if(simulation<3){ //turek FSI
-    rhof = 1000.;
-    muf = 1.;
-    rhos = 1000;
-    ni = 0.5;
-    E = 1400000; 
-  }
-  else if(simulation==3){ //bathe membrane
-    rhof = 1000;
-    muf = 0.04;
-    rhos = 800;
-    ni = 0.5;
-    E = 140000000; 
-  }
-  else if(simulation<7){ //bathe cylinder
-    rhof = 100.;
-    muf = 1.;
-    rhos = 800;
-    ni = 0.5;
-    E = 1800000;
-  }
-  else if(simulation==7){ //comsol
-    rhof = 1000.;
-    muf = 0.001;
-    rhos = 7850;
-    ni = 0.5;
-    E = 200000;
-  }
+//   if(simulation<3){ //turek FSI
+//     rhof = 1000.;
+//     muf = 1.;
+//     rhos = 1000;
+//     ni = 0.5;
+//     E = 1400000; 
+//   }
+//   else if(simulation==3){ //bathe membrane
+//     rhof = 1000;
+//     muf = 0.04;
+//     rhos = 800;
+//     ni = 0.5;
+//     E = 140000000; 
+//   }
+//   else if(simulation<7){ //bathe cylinder
+//     rhof = 100.;
+//     muf = 1.;
+//     rhos = 800;
+//     ni = 0.5;
+//     E = 1800000;
+//   }
+//   else if(simulation==7){ //comsol
+//     rhof = 1000.;
+//     muf = 0.001;
+//     rhos = 7850;
+//     ni = 0.5;
+//     E = 200000;
+//   }
  
-  Parameter par(Lref,Uref);
+//   Parameter par(Lref,Uref);
   
   // Generate Solid Object
-  Solid solid;
-  if(simulation<3){
-    solid = Solid(par,E,ni,rhos,"Mooney-Rivlin-MassPenalty"); 
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-  }
-  else if(simulation==3 || simulation == 7){
-    solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-  }
-  else if(simulation < 7){	
-    solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean");
-    //Solid solid(par,E,ni,rhos,"Neo-Hookean-BW");
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-    //solid = Solid(par,E,ni,rhos,"Neo-Hookean-AB-Penalty"); //Allan Bower
-  }
+//   Solid solid;
+//   if(simulation<3){
+//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin-MassPenalty"); 
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
+//   }
+//   else if(simulation==3 || simulation == 7){
+//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
+//   }
+//   else if(simulation < 7){	
+//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean");
+//     //Solid solid(par,E,ni,rhos,"Neo-Hookean-BW");
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
+//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-AB-Penalty"); //Allan Bower
+//   }
   
   
-  cout << "Solid properties: " << endl;
-  cout << solid << endl;
-  
-  // Generate Fluid Object
-  Fluid fluid(par,muf,rhof,"Newtonian");
-  cout << "Fluid properties: " << endl;
-  cout << fluid << endl;
+//   cout << "Solid properties: " << endl;
+//   cout << solid << endl;
+//   
+//   // Generate Fluid Object
+//   Fluid fluid(par,muf,rhof,"Newtonian");
+//   cout << "Fluid properties: " << endl;
+//   cout << fluid << endl;
 
   // mesh ----------------------------------------
+  double Lref, Uref;
+  Lref = 1.; Uref = 1.;
+  Parameter par(Lref,Uref);
+  
   unsigned short nm,nr;
   unsigned int nlevels = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.nlevels",1);   
   nm=nlevels;
@@ -268,13 +272,37 @@ int main(int argc, char *argv[]) {
   int tmp=nm;
   nm+=nr;
   nr=tmp;
-      
+
+  
   MultiLevelMesh ml_msh;
   
   if(inputparser->isTrue("multilevel_mesh.first.type","filename"))
   {
     std::string filename = inputparser->getValue("multilevel_mesh.first.type.filename", "./input/input.neu"); 
     ml_msh.ReadCoarseMesh(filename.c_str(),"seventh",Lref);
+    
+    // it should be used until boundary condition will be red from file
+    if(filename.compare("input/turek.neu") == 0){
+      simulation = 1;
+    }
+    else if(filename.compare("input/beam.neu") == 0){
+      simulation = 2;
+    }  
+    else if(filename.compare("input/drum.neu") == 0){
+      simulation = 3;
+    }  
+    else if(filename.compare("input/bathe_FSI.neu") == 0) {
+      simulation = 4;
+    }
+    else if(filename.compare("input/bathe_shell.neu") == 0){
+      simulation = 5;
+    }
+    else if(filename.compare("input/bathe_cylinder.neu") == 0){
+      simulation = 6;
+    }
+    else if(filename.compare("input/comsolbenchmark.neu") == 0){
+      simulation = 7;
+    }
   }
   else if(inputparser->isTrue("multilevel_mesh.first.type","box"))
   {
@@ -299,6 +327,9 @@ int main(int argc, char *argv[]) {
     
   ml_msh.PrintInfo();
   
+  // it should be taken from multilevel_mesh
+  unsigned int dimension = ml_msh.GetLevel(0)->GetDimension();
+  
   // end-mesh----------------------------------------------------------------
       
   MultiLevelSolution ml_sol(&ml_msh);
@@ -306,13 +337,16 @@ int main(int argc, char *argv[]) {
   //Start System Variables
   ml_sol.AddSolution("DX",LAGRANGE,SECOND,1);
   ml_sol.AddSolution("DY",LAGRANGE,SECOND,1);
-  if (!dimension2D) ml_sol.AddSolution("DZ",LAGRANGE,SECOND,1);
+  if (dimension == 3) 
+    ml_sol.AddSolution("DZ",LAGRANGE,SECOND,1);
   ml_sol.AssociatePropertyToSolution("DX","Displacement"); // Add this line
   ml_sol.AssociatePropertyToSolution("DY","Displacement"); // Add this line 
-  if (!dimension2D) ml_sol.AssociatePropertyToSolution("DZ","Displacement"); // Add this line 
+  if (dimension == 3) 
+    ml_sol.AssociatePropertyToSolution("DZ","Displacement"); // Add this line 
   ml_sol.AddSolution("U",LAGRANGE,SECOND,1);
   ml_sol.AddSolution("V",LAGRANGE,SECOND,1);
-  if (!dimension2D) ml_sol.AddSolution("W",LAGRANGE,SECOND,1);
+  if (dimension == 3) 
+    ml_sol.AddSolution("W",LAGRANGE,SECOND,1);
   // Since the Pressure is a Lagrange multiplier it is used as an implicit variable
   ml_sol.AddSolution("P",DISCONTINOUS_POLYNOMIAL,FIRST,1);
   ml_sol.AssociatePropertyToSolution("P","Pressure"); // Add this line
@@ -334,13 +368,34 @@ int main(int argc, char *argv[]) {
 
   ml_sol.GenerateBdc("DX","Steady");
   ml_sol.GenerateBdc("DY","Steady");
-  if (!dimension2D) ml_sol.GenerateBdc("DZ","Steady");
+  if (dimension == 3) 
+    ml_sol.GenerateBdc("DZ","Steady");
   ml_sol.GenerateBdc("U","Steady");
   ml_sol.GenerateBdc("V","Steady");
-  if (!dimension2D) ml_sol.GenerateBdc("W","Steady");
+  if (dimension == 3) 
+    ml_sol.GenerateBdc("W","Steady");
   ml_sol.GenerateBdc("P","Steady");
   
   MultiLevelProblem ml_prob(&ml_msh,&ml_sol);
+  
+  double rhof, muf, rhos, ni, E; 
+  string solid_model, fluid_model;
+  E = inputparser->getValue("multilevel_problem.parameters.solid.young_module", 1.);
+  ni = inputparser->getValue("multilevel_problem.parameters.solid.poisson_coefficient", 0.);
+  rhos = inputparser->getValue("multilevel_problem.parameters.solid.density", 1.);
+  solid_model = inputparser->getValue("multilevel_problem.parameters.solid.model", "default_model");
+  Solid solid(par,E,ni,rhos,solid_model.c_str()); ;
+  cout << "Solid properties: " << endl;
+  cout << solid << endl;
+  
+  // Generate Fluid Object
+  muf = inputparser->getValue("multilevel_problem.parameters.fluid.dynamic_viscosity", 1.);
+  rhof = inputparser->getValue("multilevel_problem.parameters.fluid.density", 1.);
+  fluid_model = inputparser->getValue("multilevel_problem.parameters.fluid.model", "default_model");
+  Fluid fluid(par,muf,rhof,fluid_model.c_str());
+  cout << "Fluid properties: " << endl;
+  cout << fluid << endl;
+  
   // Add fluid object
   ml_prob.parameters.set<Fluid>("Fluid") = fluid;
   // Add Solid Object
@@ -353,10 +408,12 @@ int main(int argc, char *argv[]) {
   MonolithicFSINonLinearImplicitSystem & system = ml_prob.add_system<MonolithicFSINonLinearImplicitSystem> ("Fluid-Structure-Interaction");
   system.AddSolutionToSystemPDE("DX");
   system.AddSolutionToSystemPDE("DY");
-  if (!dimension2D) system.AddSolutionToSystemPDE("DZ");
+  if (dimension == 3) 
+    system.AddSolutionToSystemPDE("DZ");
   system.AddSolutionToSystemPDE("U");
   system.AddSolutionToSystemPDE("V");
-  if (!dimension2D) system.AddSolutionToSystemPDE("W");
+  if (dimension == 3) 
+    system.AddSolutionToSystemPDE("W");
   system.AddSolutionToSystemPDE("P");
   
 
@@ -390,9 +447,6 @@ int main(int argc, char *argv[]) {
   else if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","vanka")) {
     system.SetMgSmoother(VANKA_SMOOTHER);
   }
-//   if(Gmres) 		system.SetMgSmoother(GMRES_SMOOTHER);
-//   else if(Asm) 		system.SetMgSmoother(ASM_SMOOTHER);
-//   else if(Vanka)	system.SetMgSmoother(VANKA_SMOOTHER);
   
   // init all the systems
   system.init();
@@ -410,11 +464,13 @@ int main(int argc, char *argv[]) {
   
   system.AddVariableToBeSolved("DX");
   system.AddVariableToBeSolved("DY");
-  if (!dimension2D)  system.AddVariableToBeSolved("DZ");
+  if (dimension == 3) 
+    system.AddVariableToBeSolved("DZ");
   
   system.AddVariableToBeSolved("U");
   system.AddVariableToBeSolved("V");
-  if (!dimension2D)  system.AddVariableToBeSolved("W");
+  if (dimension == 3) 
+    system.AddVariableToBeSolved("W");
   system.AddVariableToBeSolved("P");
     
   //for Vanka and ASM smoothers
@@ -422,7 +478,7 @@ int main(int argc, char *argv[]) {
   if(simulation < 3){
     system.SetElementBlockNumber(2);
   }
-  else if(simulation ==3 || !dimension2D){
+  else if(simulation ==3 || dimension == 3){
     //system.SetElementBlockNumber("All");
     //system.SetElementBlockNumber(2);
     system.SetElementBlockNumberFluid(2);
@@ -455,10 +511,12 @@ int main(int argc, char *argv[]) {
   std::vector<std::string> print_vars;
   print_vars.push_back("DX");
   print_vars.push_back("DY");
-  if (!dimension2D) print_vars.push_back("DZ");
+  if (dimension == 3) 
+    print_vars.push_back("DZ");
   print_vars.push_back("U");
   print_vars.push_back("V");
-  if (!dimension2D) print_vars.push_back("W");
+  if (dimension == 3) 
+    print_vars.push_back("W");
   print_vars.push_back("P");
       
   ml_sol.GetWriter()->write_system_solutions(files.GetOutputPath(),"biquadratic",print_vars);

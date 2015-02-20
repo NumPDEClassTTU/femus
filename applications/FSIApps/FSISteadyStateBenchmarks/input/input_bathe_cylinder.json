@@ -10,7 +10,21 @@
              },
              
     // multilevel problem
-    "multilevel_problem" : {
+    "multilevel_problem" : 
+    {
+      "parameters" : {
+        "fluid" : {
+          "density" : 100.0,
+          "dynamic_viscosity" : 1.0,
+          "model" : "Newtonian" 
+        },
+        "solid" : {
+          "density" : 800.0,
+          "young_module" : 1800000,
+          "poisson_coefficient" : 0.5,        
+          "model" : "Mooney-Rivlin"
+        }
+      },
       "multilevel_mesh" : {
         "first" : {
           "system" : {
