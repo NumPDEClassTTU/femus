@@ -28,18 +28,23 @@
         "first" : {
           "system" : {
             "fsi" : {
+              "non_linear_solver" : {
+                "max_number_nonlinear_iteration" : 10,
+                "abs_conv_tol" : 1.e-5
+              },
               "linear_solver" : {
-                "max_number_linear_iteration" : 6, 
+                "max_number_linear_iteration" : 2, 
                 "abs_conv_tol" : 1.e-09, 
                 "type" : {
                   "multigrid" : {
                     "nlevels" : 4, 
                     "npresmoothing" : 1, 
                     "npostsmoothing" : 1,                                                                                                 
-                    "mgtype" : "V_cycle",
+                    "mgtype" : "F_cycle",
                     "smoother" : {
                     "type" : {
-                      "gmres" : {
+                      "asm" : {
+                        "block_number" : 3,
                         "ksp" : "gmres",
                         "precond" : "ilu",
                         "rtol"    : 1.e-12,

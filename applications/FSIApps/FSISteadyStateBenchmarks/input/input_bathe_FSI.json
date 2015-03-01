@@ -28,8 +28,12 @@
         "first" : {
           "system" : {
             "fsi" : {
+              "non_linear_solver" : {
+                "max_number_nonlinear_iteration" : 15,
+                "abs_conv_tol" : 1.e-10
+              },
               "linear_solver" : {
-                "max_number_linear_iteration" : 6, 
+                "max_number_linear_iteration" : 8, 
                 "abs_conv_tol" : 1.e-09, 
                 "type" : {
                   "multigrid" : {
@@ -39,9 +43,13 @@
                     "mgtype" : "V_cycle",
                     "smoother" : {
                     "type" : {
-                      "gmres" : {
+                      "asm" : {
+                        "fsi" : {
+                          "block_fluid_number" : 2, 
+                          "block_solid_number" : "all"
+                        },
                         "ksp" : "gmres",
-                        "precond" : "ilu",
+                        "precond" : "mlu",
                         "rtol"    : 1.e-12,
                         "atol"    : 1.e-20,
                         "divtol"  : 1.e+50,

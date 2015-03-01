@@ -12,8 +12,6 @@
 #include "MonolithicFSINonLinearImplicitSystem.hpp"
 #include "../include/IncompressibleFSIAssembly.hpp"
 
-double scale=1000.;
-
 using namespace std;
 using namespace femus;
 
@@ -85,179 +83,6 @@ int main(int argc, char *argv[]) {
   std::auto_ptr<InputParser> inputparser = InputParser::build(path);
   
   unsigned simulation = 0;
-//   bool dimension2D;
-  
-//   if(argc >= 2) {
-//     if( !strcmp("turek_2D_FSI",argv[1])) {   /** FSI steady-state Turek benchmark */
-//       simulation=1; 
-// //       dimension2D=1;  
-//     }
-//     else if( !strcmp("turek_2D_solid",argv[1])) {    /** Solid Turek beam benchmark test. Beware: activate gravity in assembly */
-//       simulation=2; 
-// //       dimension2D=1;  
-//    }
-//     else if( !strcmp("bathe_2D_FSI",argv[1])){  /** Bathe 2D membrane benchmark */
-//       simulation=3; 
-// //       dimension2D=1;  
-//    }
-//    else if( !strcmp("bathe_3D_FSI",argv[1])){  /** Bathe 3D cylinder FSI benchmark */
-//       simulation=4; 
-// //       dimension2D=0;  
-//     }
-//     else if( !strcmp("bathe_3D_solid",argv[1])) { /** Bathe 3D solid, for debugging */
-//       simulation=5; 
-// //       dimension2D=0;  
-//     }
-//     else if( !strcmp("bathe_3D_fluid",argv[1])) { /** Bathe 3D fluid, for debugging */
-//       simulation=6; 
-// //       dimension2D=0;  
-//     }
-//     else if( !strcmp("comsol_2D_FSI",argv[1])) { /** Comsol 2D vertical beam benchmark */
-//       simulation=7; 
-// //       dimension2D=1;  
-//     }
-// 
-//     else{    
-//       cout << "wrong input arguments!\n";
-//       cout << "please specify the simulation you want to run, options are\n";
-//       cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
-//       abort();
-//     }
-//   }
-//   else {   
-//     cout << "no input arguments!\n";
-//     cout << "please specify the simulation you want to run, options are\n";
-//     cout << "turek_2D_FSI \n turek_2D_solid \n bathe_2D_FSI \n bathe_3D_FSI \n bathe_3D_solid \n bathe_3D_fluid \n comsol_2D_FSI \n";
-//     abort();
-//   }
-   
-  
-//   bool Vanka=0, Gmres=0, Asm=0;
-//   if(argc >= 3) {
-//     if( !strcmp("vanka",argv[2])) 	Vanka=1;
-//     else if( !strcmp("gmres",argv[2])) 	Gmres=1;
-//     else if( !strcmp("asm",argv[2])) 	Asm=1;
-//     
-//     if(Vanka+Gmres+Asm==0) {
-//       cout << "wrong input arguments!" << endl;
-//       exit(0);
-//     }
-//   }
-//   else {
-//     cout << "No input argument set default smoother = Asm" << endl;
-//     Asm=1;
-//   }
-  
-   
-  
-	
-//   unsigned short nm,nr;
-//   std::cout<<"#MULTIGRID levels? (>=1) \n";
-//   //std::cin>>nm;
-//   if(simulation < 3)
-//     nm=3;
-//   else if(simulation == 3 || simulation == 7)
-//     nm=4;
-//   else if(simulation < 7)
-//     nm=2;
-// 
-// 
-//   std::cout<<"#MAX_REFINEMENT levels? (>=0) \n";
-//   //std::cin>>nr;
-//   nr=0;
-//   int tmp=nm;
-//   nm+=nr;
-//   nr=tmp;
-
-//   std::string infile;
-//   
-//   if(1 == simulation){
-//     infile = "./input/turek.neu";
-//   }
-//   else if(2 == simulation){
-//     infile = "./input/beam.neu";
-//   }  
-//   else if(3 == simulation){
-//     infile = "./input/drum.neu";
-//   }  
-//   else if(4 == simulation) {
-//     infile = "./input/bathe_FSI.neu";
-//   }
-//   else if(5 == simulation){
-//     infile = "./input/bathe_shell.neu";
-//   }
-//   else if(6 == simulation){
-//     infile = "./input/bathe_cylinder.neu";
-//   }
-//   else if(7 == simulation){
-//     infile = "./input/comsolbenchmark.neu";
-//   }
-  
-//    double Lref, Uref, rhof, muf, rhos, ni, E; 
-//   
-//     Lref = 1.;	
-//     Uref = 1.;
- 
-//   if(simulation<3){ //turek FSI
-//     rhof = 1000.;
-//     muf = 1.;
-//     rhos = 1000;
-//     ni = 0.5;
-//     E = 1400000; 
-//   }
-//   else if(simulation==3){ //bathe membrane
-//     rhof = 1000;
-//     muf = 0.04;
-//     rhos = 800;
-//     ni = 0.5;
-//     E = 140000000; 
-//   }
-//   else if(simulation<7){ //bathe cylinder
-//     rhof = 100.;
-//     muf = 1.;
-//     rhos = 800;
-//     ni = 0.5;
-//     E = 1800000;
-//   }
-//   else if(simulation==7){ //comsol
-//     rhof = 1000.;
-//     muf = 0.001;
-//     rhos = 7850;
-//     ni = 0.5;
-//     E = 200000;
-//   }
- 
-//   Parameter par(Lref,Uref);
-  
-  // Generate Solid Object
-//   Solid solid;
-//   if(simulation<3){
-//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin-MassPenalty"); 
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-//   }
-//   else if(simulation==3 || simulation == 7){
-//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-MassPenalty");
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-//   }
-//   else if(simulation < 7){	
-//     solid = Solid(par,E,ni,rhos,"Mooney-Rivlin"); 
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean");
-//     //Solid solid(par,E,ni,rhos,"Neo-Hookean-BW");
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-BW-Penalty");
-//     //solid = Solid(par,E,ni,rhos,"Neo-Hookean-AB-Penalty"); //Allan Bower
-//   }
-  
-  
-//   cout << "Solid properties: " << endl;
-//   cout << solid << endl;
-//   
-//   // Generate Fluid Object
-//   Fluid fluid(par,muf,rhof,"Newtonian");
-//   cout << "Fluid properties: " << endl;
-//   cout << fluid << endl;
-
   // mesh ----------------------------------------
   double Lref, Uref;
   Lref = 1.; Uref = 1.;
@@ -422,21 +247,18 @@ int main(int argc, char *argv[]) {
   
   system.SetMgType(F_CYCLE);
   system.SetAbsoluteConvergenceTolerance(1.e-10);
-  system.SetNonLinearConvergenceTolerance(1.e-10);
   system.SetNumberPreSmoothingStep(1);
   system.SetNumberPostSmoothingStep(1);
-  if(simulation < 3 || simulation == 7){
-    system.SetMaxNumberOfLinearIterations(2);
-    system.SetMaxNumberOfNonLinearIterations(10);
-  }
-  else if(simulation < 7){	
-    system.SetMaxNumberOfLinearIterations(8);
-    system.SetMaxNumberOfNonLinearIterations(15); 
-  }
   
-  if(simulation == 7)  system.SetNonLinearConvergenceTolerance(1.e-5);
-
-   
+  unsigned int max_number_linear_iteration = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.max_number_linear_iteration",6);
+  system.SetMaxNumberOfLinearIterations(max_number_linear_iteration);
+  
+  unsigned int max_number_nonlinear_iteration = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.non_linear_solver.max_number_nonlinear_iteration",6);
+  system.SetMaxNumberOfNonLinearIterations(max_number_nonlinear_iteration);
+  
+  double nonlinear_convergence_tolerance = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.non_linear_solver.abs_conv_tol",1.e-5);
+  system.SetNonLinearConvergenceTolerance(nonlinear_convergence_tolerance);
+  
   //Set Smoother Options
   if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","gmres")) {
     system.SetMgSmoother(GMRES_SMOOTHER);
@@ -451,12 +273,49 @@ int main(int argc, char *argv[]) {
   // init all the systems
   system.init();
   
-  system.SetSolverFineGrids(GMRES);
-  if(3 >= simulation || 6 == simulation || 7 == simulation )
-    system.SetPreconditionerFineGrids(ILU_PRECOND); 
-  else
-    system.SetPreconditionerFineGrids(MLU_PRECOND); 
- 
+  //Set Smoother-solver Options
+  if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","gmres")) {
+    system.SetDirichletBCsHandling(ELIMINATION);  
+    system.SetSolverFineGrids(GMRES);
+    std::string precond = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.gmres.precond","ilu");
+    if(precond == "ilu") {
+      system.SetPreconditionerFineGrids(ILU_PRECOND); 
+    }
+    else if(precond == "mlu") {
+      system.SetPreconditionerFineGrids(MLU_PRECOND);
+    }
+    else {
+     return 1; 
+    }
+  }
+  else if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","asm")) {
+    system.SetSolverFineGrids(GMRES);
+    std::string precond = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.asm.precond","ilu");
+    if(precond == "ilu") {
+      system.SetPreconditionerFineGrids(ILU_PRECOND); 
+    }
+    else if(precond == "mlu") {
+      system.SetPreconditionerFineGrids(MLU_PRECOND);
+    }
+    else {
+     return 1; 
+    }
+  }
+  else if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","vanka")) {
+    system.SetSolverFineGrids(GMRES);
+    std::string precond = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.vanka.precond","ilu");
+    if(precond == "ilu") {
+      system.SetPreconditionerFineGrids(ILU_PRECOND); 
+    }
+    else if(precond == "mlu") {
+      system.SetPreconditionerFineGrids(MLU_PRECOND);
+    }
+    else {
+     return 1; 
+    }
+  }
+  
+  
   system.SetTolerances(1.e-12,1.e-20,1.e+50,20);
  
   system.ClearVariablesToBeSolved();
@@ -475,25 +334,21 @@ int main(int argc, char *argv[]) {
     
   //for Vanka and ASM smoothers
   system.SetNumberOfSchurVariables(1);
-  if(simulation < 3){
-    system.SetElementBlockNumber(2);
+  if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type","asm")) {
+    if(inputparser->isTrue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.asm","fsi")) {
+      unsigned int blockfluidnumber = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.asm.block_fluid_number",2);
+      system.SetElementBlockNumberFluid(blockfluidnumber);
+      std::string allsolidblock = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.asm.block_solid_number","all");     
+      if(allsolidblock == "all") {
+        system.SetElementBlockSolidAll();
+      }
+    }
+    else {
+      unsigned int blocknumber = inputparser->getValue("multilevel_problem.multilevel_mesh.first.system.fsi.linear_solver.type.multigrid.smoother.type.asm.block_number",2);
+      system.SetElementBlockNumber(blocknumber);
+    }
   }
-  else if(simulation ==3 || dimension == 3){
-    //system.SetElementBlockNumber("All");
-    //system.SetElementBlockNumber(2);
-    system.SetElementBlockNumberFluid(2);
-    //system.SetElementBlockNumberSolid(2);
-    //system.SetElementBlockFluidAll();
-    system.SetElementBlockSolidAll();
-  }
-  else if(simulation == 7 ){
-     system.SetElementBlockNumber(3);   
-  }
-  
-  //for Gmres smoother
-  //system.SetDirichletBCsHandling(PENALTY); 
-  system.SetDirichletBCsHandling(ELIMINATION);   
-   
+    
   ml_sol.SetWriter(VTK);
 
   std::vector<std::string> mov_vars;
